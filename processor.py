@@ -46,7 +46,7 @@ class Processor():
         """
 
         dir = ["{0000:b}".format(i) for i in range(16)]
-        self.inst.dir = dir[np.random.poisson(5)%16]
+        self.inst.dir = "0000"#dir[np.random.poisson(5)%16]
 
 """
 c = Processor(1,"P1")

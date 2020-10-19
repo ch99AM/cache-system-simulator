@@ -12,9 +12,10 @@ class L1Cache():
         column = int(dir[0:3], 2)
         return [row, column%2]
 
-    def read(self, dir):
+    def read(self, dir, state):
         time.sleep(0.1*self.clock)
         d_dir = self.__deco_dir(dir)
+        self.mem[d_dir[0]][d_dir[1]][1] = state
         return self.mem[d_dir[0]][d_dir[1]]
     
     def write(self, dir, state, data):
