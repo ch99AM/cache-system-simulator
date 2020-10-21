@@ -1,40 +1,46 @@
 
 import time
+import numpy as np
 
 class L1Cache():
     
     def __init__(self, clock):
         self.mem = [[[str(i+j*2), "I", "", "0000"] for i in range(2)] for j in range(2)]
         self.clock = clock
-    
-    def __deco_dir(self, dir):
-        row = int(dir[3], 2)
-        column = int(dir[0:3], 2)
-        return [row, column%2]
 
-    def read(self, dir, state):
-        time.sleep(0.1*self.clock)
-        d_dir = self.__deco_dir(dir)
-        self.mem[d_dir[0]][d_dir[1]][1] = state
-        return self.mem[d_dir[0]][d_dir[1]]
+    def read(self, dir):
+        if self.find_dir(dir):
+            time.sleep(0.1*self.clock)
+            set_m = int(dir[3], 2)
+            for block in self.mem[set_m]:
+                if dir == block[2]:
+                    return block
+        else:
+            return "cache miss"
     
+    # write-through
+    # remplazo aleatorio
     def write(self, dir, state, data):
+        set_m = int(dir[3], 2)
+        block = np.random.randint(2)
+        print("wirte to main memory and write miss")
         time.sleep(0.1*self.clock)
-        d_dir = self.__deco_dir(dir)
-        self.mem[d_dir[0]][d_dir[1]][3] = data
-        self.mem[d_dir[0]][d_dir[1]][1] = state
-        self.mem[d_dir[0]][d_dir[1]][2] = dir
+        self.mem[set_m][block][3] = data
+        self.mem[set_m][block][1] = state
+        self.mem[set_m][block][2] = dir
+
+    def find_dir(self, dir):
+        for block_m in self.mem[int(dir[3], 2)]:
+            if dir == block_m[2] and block_m[1] != "I":
+                return True
+        return False
 
 
-"""
+
+
 c = L1Cache(1)
 c.write('0010', 'E', 'ABCD')
 c.write('1101', 'E', 'FFFF')
-print(c.read('0010'))
-print(c.mem)
-
-m.write('1010', 'ABCD')
-print(m.read('1010'))
-m.write('1111', 'FFFD')
-print(m.read('1111'))
-"""
+print(c.read("0010"))
+print(c.read("1101"))
+print(c.read("0000"))
