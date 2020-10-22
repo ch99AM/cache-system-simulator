@@ -31,7 +31,7 @@ class L1Cache(object):
 
     def read(self, dir):
         if self.find_dir(dir):
-            time.sleep(0.1*self.clock)
+            time.sleep(0.2*self.clock)
             set_m = int(dir[-1], 2)
             for block in self.mem[set_m]:
                 if dir == block[2]:
@@ -56,7 +56,7 @@ class L1Cache(object):
             self.mem[set_m][block][1] = state
             self.mem[set_m][block][2] = dir
             write_mem(self.mem[set_m][block])     
-        time.sleep(0.1*self.clock)
+        time.sleep(0.2*self.clock)
 
     def find_dir(self, dir):
         for block_m in self.mem[int(dir[-1], 2)]:
@@ -165,9 +165,16 @@ class CControler(object):
         self.ins = [p.Inst(), p.Inst()]
         self.counter = 0
 
-    def step(self, inst_send = 'NA'): 
-        if inst_send != 'NA':
-            inst = inst_send
+    def step(self, inst_send = 'none'): 
+        if inst_send[0] == self.proc.n_proc:
+            inst = p.Inst()
+            inst.num_proc = inst_send[0]
+            inst.op = inst_send[1]
+            if inst.op == 'read':
+                inst.dir = inst_send[2]
+            if inst.op == 'write':
+                inst.dir = inst_send[3]
+                inst.data = inst_send[2]
         else:
             inst = self.proc.gen_instr()
         self.ins.append(inst)

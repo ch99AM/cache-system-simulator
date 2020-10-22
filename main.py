@@ -23,6 +23,11 @@ class Application(tk.Frame):
             width=1200, height=700, highlightthickness=0)
         self.dad_canvas.pack(fill=tk.BOTH, expand=tk.YES)
         
+        self.thread1 = threading.Thread()
+        self.thread2 = threading.Thread()
+        self.thread3 = threading.Thread()
+        self.thread4 = threading.Thread()
+        
         self.create_frames()
         
     def create_frames(self):        
@@ -73,49 +78,61 @@ class Application(tk.Frame):
     
     def gui_proc(self):
         # Instruction label
-        str_ins = 'Ultima: '+bus.p1.ins[-2].num_proc+": "+bus.p1.ins[-2].op+" "+\
+        str_ins = 'U: '+bus.p1.ins[-2].num_proc+": "+bus.p1.ins[-2].op+" "+\
                     bus.p1.ins[-2].data+" "+bus.p1.ins[-2].dir
         l = tk.Label(self.fp1, width=20,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=15, y=70)
-        str_ins = 'Actual: '+bus.p1.ins[-1].num_proc+": "+bus.p1.ins[-1].op+" "+\
+        str_ins = 'A: '+bus.p1.ins[-1].num_proc+": "+bus.p1.ins[-1].op+" "+\
                     bus.p1.ins[-1].data+" "+bus.p1.ins[-1].dir
         l = tk.Label(self.fp1, width=20,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=15, y=110)
         clk = 'clk: '+str(bus.p1.counter)
-        tk.Label(self.fp1,text=clk,font=('Arial', 12, 'bold')).place(x=180, y=10)
+        if self.thread1.is_alive():
+            tk.Label(self.fp1,text=clk,bg='green',font=('Arial', 12, 'bold')).place(x=180, y=10)
+        else:
+            tk.Label(self.fp1,text=clk,bg='red',font=('Arial', 12, 'bold')).place(x=180, y=10)
         
-        str_ins = 'Ultima: '+bus.p2.ins[-2].num_proc+": "+bus.p2.ins[-2].op+" "+\
+        str_ins = 'U: '+bus.p2.ins[-2].num_proc+": "+bus.p2.ins[-2].op+" "+\
                     bus.p2.ins[-2].data+" "+bus.p2.ins[-2].dir
         l = tk.Label(self.fp2, width=20,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=15, y=70)
-        str_ins = 'Actual: '+bus.p2.ins[-1].num_proc+": "+bus.p2.ins[-1].op+" "+\
+        str_ins = 'A: '+bus.p2.ins[-1].num_proc+": "+bus.p2.ins[-1].op+" "+\
                     bus.p2.ins[-1].data+" "+bus.p2.ins[-1].dir
         l = tk.Label(self.fp2, width=20,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=15, y=110)
         clk = 'clk: '+str(bus.p2.counter)
-        tk.Label(self.fp2,text=clk,font=('Arial', 12, 'bold')).place(x=180, y=10)
+        if self.thread2.is_alive():
+            tk.Label(self.fp2,text=clk,bg='green',font=('Arial', 12, 'bold')).place(x=180, y=10)
+        else:
+            tk.Label(self.fp2,text=clk,bg='red',font=('Arial', 12, 'bold')).place(x=180, y=10)
 
-        str_ins = 'Ultima: '+bus.p3.ins[-2].num_proc+": "+bus.p3.ins[-2].op+" "+\
+        str_ins = 'U: '+bus.p3.ins[-2].num_proc+": "+bus.p3.ins[-2].op+" "+\
                     bus.p3.ins[-2].data+" "+bus.p3.ins[-2].dir
         l = tk.Label(self.fp3, width=20,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=15, y=70)
-        str_ins = 'Actual: '+bus.p3.ins[-1].num_proc+": "+bus.p3.ins[-1].op+" "+\
+        str_ins = 'A: '+bus.p3.ins[-1].num_proc+": "+bus.p3.ins[-1].op+" "+\
                     bus.p3.ins[-1].data+" "+bus.p3.ins[-1].dir
         l = tk.Label(self.fp3, width=20,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=15, y=110)
         clk = 'clk: '+str(bus.p3.counter)
-        tk.Label(self.fp3,text=clk,font=('Arial', 12, 'bold')).place(x=180, y=10)
+        if self.thread3.is_alive():
+            tk.Label(self.fp3,text=clk,bg='green',font=('Arial', 12, 'bold')).place(x=180, y=10)
+        else:
+            tk.Label(self.fp3,text=clk,bg='red',font=('Arial', 12, 'bold')).place(x=180, y=10)
 
-        str_ins = 'Ultima: '+bus.p4.ins[-2].num_proc+": "+bus.p4.ins[-2].op+" "+\
+        str_ins = 'U: '+bus.p4.ins[-2].num_proc+": "+bus.p4.ins[-2].op+" "+\
                     bus.p4.ins[-2].data+" "+bus.p4.ins[-2].dir
         l = tk.Label(self.fp4, width=20,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=15, y=70)
-        str_ins = 'Actual: '+bus.p4.ins[-1].num_proc+": "+bus.p4.ins[-1].op+" "+\
+        str_ins = 'A: '+bus.p4.ins[-1].num_proc+": "+bus.p4.ins[-1].op+" "+\
                     bus.p4.ins[-1].data+" "+bus.p4.ins[-1].dir
         l = tk.Label(self.fp4, width=20,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=15, y=110)
         clk = 'clk: '+str(bus.p4.counter)
-        tk.Label(self.fp4,text=clk,font=('Arial', 12, 'bold')).place(x=180, y=10)        
+        if self.thread4.is_alive():
+            tk.Label(self.fp4,text=clk,bg='green',font=('Arial', 12, 'bold')).place(x=180, y=10)
+        else:
+            tk.Label(self.fp4,text=clk,bg='red',font=('Arial', 12, 'bold')).place(x=180, y=10)        
         
         for i in range(2): 
             for j in range(2):
@@ -159,7 +176,7 @@ class Application(tk.Frame):
                 str_block = bus.p4.c_mem.mem[i][j][1]+" "+\
                     bus.p4.c_mem.mem[i][j][2]+" "+bus.p4.c_mem.mem[i][j][3]
                 e.insert(tk.END, str_block)
-        root.after(1000, self.gui_proc)
+        root.after(2000, self.gui_proc)
         
     def gui_mem(self):
         for i in range(8): 
@@ -170,60 +187,65 @@ class Application(tk.Frame):
                 l.grid(row=i, column=j*2)
                 e.grid(row=i, column=j*2+1)
                 e.insert(tk.END, bus.main_mem.mem[j+i*2])
-        root.after(1000, self.gui_mem)
+        root.after(2000, self.gui_mem)
         
     def run_cycles(self):
         cycles = int(self.cycles.get())
         if  cycles != '': 
-            thread1 = threading.Thread(target = bus.p1.num_cycles, args = (cycles, ), daemon = True)
-            thread2 = threading.Thread(target = bus.p2.num_cycles, args = (cycles, ), daemon = True)
-            thread3 = threading.Thread(target = bus.p3.num_cycles, args = (cycles, ), daemon = True)
-            thread4 = threading.Thread(target = bus.p4.num_cycles, args = (cycles, ), daemon = True)
-            thread1.start()
-            thread2.start()
-            thread3.start()
-            thread4.start()
-
+            self.thread1 = threading.Thread(target = bus.p1.num_cycles, args = (cycles, ), daemon = True)
+            self.thread2 = threading.Thread(target = bus.p2.num_cycles, args = (cycles, ), daemon = True)
+            self.thread3 = threading.Thread(target = bus.p3.num_cycles, args = (cycles, ), daemon = True)
+            self.thread4 = threading.Thread(target = bus.p4.num_cycles, args = (cycles, ), daemon = True)
+            self.thread1.start()
+            self.thread2.start()
+            self.thread3.start()
+            self.thread4.start()
             
     def step(self):
-        thread1 = threading.Thread(target = bus.p1.step, args = (), daemon = True)
-        thread2 = threading.Thread(target = bus.p2.step, args = (), daemon = True)
-        thread3 = threading.Thread(target = bus.p3.step, args = (), daemon = True)
-        thread4 = threading.Thread(target = bus.p4.step, args = (), daemon = True)
-        thread3.start()
-        thread4.start()
-        thread2.start()
-        thread1.start()
-        
-        
-    def continuos(self):
-        thread1 = threading.Thread(target = bus.p1.step, args = (), daemon = True)
-        thread2 = threading.Thread(target = bus.p2.step, args = (), daemon = True)
-        thread3 = threading.Thread(target = bus.p3.step, args = (), daemon = True)
-        thread4 = threading.Thread(target = bus.p4.step, args = (), daemon = True)
-        while not self.stopped.isSet():
-            if not thread3.is_alive():  
-                thread3 = threading.Thread(target = bus.p3.step, args = (), daemon = True)  
-                thread3.start()
-            if not thread4.is_alive():
-                thread4 = threading.Thread(target = bus.p4.step, args = (), daemon = True)
-                thread4.start()
-            if not thread2.is_alive():
-                thread2 = threading.Thread(target = bus.p2.step, args = (), daemon = True)
-                thread2.start()
-            if not thread1.is_alive():
-                thread1 = threading.Thread(target = bus.p1.step, args = (), daemon = True)
-                thread1.start()
-                
-            
-        
-    def run_contiuos(self):
         ins = self.ins_entry.get()
         if ins != '':
+            self.ins_entry.delete(0, 'end')
             ins = ins.split()
-            print(ins)        
-        thread1 = threading.Thread(target = self.continuos, args = (), daemon = True)
-        thread1.start()
+        else: 
+            ins = 'none'
+        self.thread1 = threading.Thread(target = bus.p1.step, args = (ins,), daemon = True)
+        self.thread2 = threading.Thread(target = bus.p2.step, args = (ins,), daemon = True)
+        self.thread3 = threading.Thread(target = bus.p3.step, args = (ins,), daemon = True)
+        self.thread4 = threading.Thread(target = bus.p4.step, args = (ins,), daemon = True)
+        self.thread1.start()
+        self.thread2.start()
+        self.thread3.start()
+        self.thread4.start()
+        
+    def continuos(self):
+        ins = self.ins_entry.get()
+        if ins != '':
+            self.ins_entry.delete(0, 'end')
+            ins = ins.split()
+        else: 
+            ins = 'none'
+        self.thread1 = threading.Thread(target = bus.p1.step, args = (ins,), daemon = True)
+        self.thread2 = threading.Thread(target = bus.p2.step, args = (ins,), daemon = True)
+        self.thread3 = threading.Thread(target = bus.p3.step, args = (ins,), daemon = True)
+        self.thread4 = threading.Thread(target = bus.p4.step, args = (ins,), daemon = True)
+        while not self.stopped.isSet():
+            if not self.thread3.is_alive():  
+                self.thread3 = threading.Thread(target = bus.p3.step, args = (ins,), daemon = True)  
+                self.thread3.start()
+            if not self.thread4.is_alive():
+                self.thread4 = threading.Thread(target = bus.p4.step, args = (ins,), daemon = True)
+                self.thread4.start()
+            if not self.thread2.is_alive():
+                self.thread2 = threading.Thread(target = bus.p2.step, args = (ins,), daemon = True)
+                self.thread2.start()
+            if not self.thread1.is_alive():
+                self.thread1 = threading.Thread(target = bus.p1.step, args = (ins,), daemon = True)
+                self.thread1.start()
+        self.stopped.clear()
+        
+    def run_contiuos(self):      
+        thread = threading.Thread(target = self.continuos, args = (), daemon = True)
+        thread.start()
         
     def pause(self):
         self.stopped.set()
