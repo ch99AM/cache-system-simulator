@@ -61,7 +61,7 @@ class Application(tk.Frame):
         self.cycles = tk.Entry(self.dad_canvas, fg='blue', width=5,font=('Arial',14,'bold'))
         self.cycles.place(x=10,y=500)
         self.cycles.insert(tk.END, '10') #default
-        tk.Button(self.dad_canvas, text ="Paso", command = self.run_cycles).place(x=100, y=550)
+        tk.Button(self.dad_canvas, text ="Paso->", command = self.step).place(x=100, y=550)
         tk.Button(self.dad_canvas, text ="Continuo", command = self.run_cycles).place(x=100, y=600)
         
         self.gui_mem()
@@ -72,18 +72,27 @@ class Application(tk.Frame):
         str_ins = bus.p1.ins.num_proc+": "+bus.p1.ins.op+" "+bus.p1.ins.data+" "+bus.p1.ins.dir
         l = tk.Label(self.fp1, width=15,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=30, y=50)
+        clk = 'clk: '+str(bus.p1.counter)
+        tk.Label(self.fp1,text=clk,font=('Arial', 12, 'bold')).place(x=180, y=10)
         
         str_ins = bus.p2.ins.num_proc+": "+bus.p2.ins.op+" "+bus.p2.ins.data+" "+bus.p2.ins.dir
         l = tk.Label(self.fp2, width=15,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=30, y=50)
+        clk = 'clk: '+str(bus.p2.counter)
+        tk.Label(self.fp2,text=clk,font=('Arial', 12, 'bold')).place(x=180, y=10)
         
         str_ins = bus.p3.ins.num_proc+": "+bus.p3.ins.op+" "+bus.p3.ins.data+" "+bus.p3.ins.dir
         l = tk.Label(self.fp3, width=15,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=30, y=50)
+        clk = 'clk: '+str(bus.p3.counter)
+        tk.Label(self.fp3,text=clk,font=('Arial', 12, 'bold')).place(x=180, y=10)
         
         str_ins = bus.p4.ins.num_proc+": "+bus.p4.ins.op+" "+bus.p4.ins.data+" "+bus.p4.ins.dir
         l = tk.Label(self.fp4, width=15,text=str_ins , font=('Arial', 12, 'bold'))
         l.place(x=30, y=50)
+        clk = 'clk: '+str(bus.p4.counter)
+        tk.Label(self.fp4,text=clk,font=('Arial', 12, 'bold')).place(x=180, y=10)
+        
                 
         for i in range(2): 
             for j in range(2):
@@ -127,7 +136,7 @@ class Application(tk.Frame):
                 str_block = bus.p4.c_mem.mem[i][j][1]+" "+\
                     bus.p4.c_mem.mem[i][j][2]+" "+bus.p4.c_mem.mem[i][j][3]
                 e.insert(tk.END, str_block)
-        root.after(1000, self.gui_proc)
+        root.after(100, self.gui_proc)
         
     def gui_mem(self):
         for i in range(8): 
@@ -138,7 +147,7 @@ class Application(tk.Frame):
                 l.grid(row=i, column=j*2)
                 e.grid(row=i, column=j*2+1)
                 e.insert(tk.END, bus.main_mem.mem[j+i*2])
-        root.after(1000, self.gui_mem)
+        root.after(100, self.gui_mem)
         
     def run_cycles(self):
         cycles = int(self.cycles.get())
