@@ -3,7 +3,7 @@ import main_memory
 
 # Funtions for main memory===========================
 main_mem = main_memory.Memory() #
-clock = 1
+clock = 3
 
 def read_mem(dir):
     return main_mem.read(dir, clock)
@@ -77,6 +77,9 @@ print(c.read("1101"))
 """
 # ------------------------------------
 
+import threading 
+lock = threading.Lock()
+
 p1 = ""
 p2 = ""
 p3 = ""
@@ -84,32 +87,40 @@ p4 = ""
 
 
 def bus_rd(block, num_proc):
+    lock.acquire()
     request = Request()
     request.dir = block[0]
     request.msg = 'BusRd'
+    temp_ctr = 0
     if num_proc != 'P1': # result is data
-        temp_result = p1.snoop_bus(request)
-        if temp_result != 'NA':
-            result = [block[0], 'S', temp_result]
+        r1 = p1.snoop_bus(request)
+        if r1 != 'NA':
+            result = [block[0], 'S', r1]
+            temp_ctr += 1
     if num_proc != 'P2':
-        temp_result = p2.snoop_bus(request)
-        if temp_result != 'NA':
-            result = [block[0], 'S', temp_result]
+        r2 = p2.snoop_bus(request)
+        if r2 != 'NA':
+            result = [block[0], 'S', r2]
+            temp_ctr += 1
     if num_proc != 'P3':
-        temp_result = p3.snoop_bus(request)
-        if temp_result != 'NA':
-            result = [block[0], 'S', temp_result]
+        r3 = p3.snoop_bus(request)
+        if r3 != 'NA':
+            result = [block[0], 'S', r3]
+            temp_ctr += 1
     if num_proc != 'P4':
-        temp_result = p4.snoop_bus(request)
-        if temp_result != 'NA':
-            result = [block[0], 'S', temp_result]
-    if temp_result == 'NA':
-        result = read_mem(block[0])
-        result = [block[0], 'E', result]
+        r4 = p4.snoop_bus(request)
+        if r4 != 'NA':
+            result = [block[0], 'S', r4]
+            temp_ctr += 1
+    if temp_ctr == 0:
+        r5 = read_mem(block[0])
+        result = [block[0], 'E', r5]
+    lock.release()
     return result
         
 
 def bus_rdx(block, num_proc):
+    lock.acquire()
     request = Request()
     request.dir = block[0]
     request.msg = 'BusRdX'
@@ -121,9 +132,11 @@ def bus_rdx(block, num_proc):
         result = p3.snoop_bus(request)
     if num_proc != 'P4':
         result = p4.snoop_bus(request)
+    lock.release()
     return result
 
 def bus_upgr(block, num_proc):
+    lock.acquire()
     request = Request()
     request.dir = block[0]
     request.msg = 'BusUpgr'
@@ -135,6 +148,7 @@ def bus_upgr(block, num_proc):
         result = p3.snoop_bus(request)
     if num_proc != 'P4':
         result = p4.snoop_bus(request)
+    lock.release()
     return result
 
 #-------------------------------------
@@ -148,12 +162,15 @@ class CControler(object):
         self.clock = clock
         self.proc = p.Processor(self.clock, n_proc)
         self.c_mem = L1Cache(self.clock)
-        self.ins = p.Inst()
+        self.ins = [p.Inst(), p.Inst()]
         self.counter = 0
 
-    def step(self): 
-        inst = self.proc.gen_instr()
-        self.ins = inst
+    def step(self, inst_send = 'NA'): 
+        if inst_send != 'NA':
+            inst = inst_send
+        else:
+            inst = self.proc.gen_instr()
+        self.ins.append(inst)
         if inst.op == 'write': #Processor request PrWr
             s = self.get_state(inst.dir)
             if s == 'I' or s == 'NA':
@@ -179,7 +196,7 @@ class CControler(object):
     def num_cycles(self, cycles): 
         for i in range(cycles):
             inst = self.proc.gen_instr()
-            self.ins = inst
+            self.ins.append(inst)
             if inst.op == 'write': #Processor request PrWr
                 s = self.get_state(inst.dir)
                 if s == 'I' or s == 'NA':
